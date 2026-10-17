@@ -1,0 +1,16 @@
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card { background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); text-align: center; }
+.stat-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.stat-value { font-size: 1.5rem; font-weight: 800; color: #111827; }
+.stat-label { font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem; }
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.card-header { padding: 1rem 1.25rem; font-weight: 700; border-bottom: 1px solid #f3f4f6; font-size: 1rem; }
+.card-body { padding: 0.5rem; }
+.list-item { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0.75rem; border-radius: 8px; }
+.list-item:hover { background: #f9fafb; }
+.item-info { display: flex; flex-direction: column; }
+.item-title { font-weight: 600; font-size: 0.85rem; }
+.item-sub { font-size: 0.75rem; color: #9ca3af; }
+.item-value { font-weight: 700; font-size: 0.85rem; color: #111827; }
+.empty-text { text-align: center; color: #9ca3af; padding: 2rem; }
+@media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }

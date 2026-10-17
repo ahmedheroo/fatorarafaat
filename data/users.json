@@ -1,0 +1,20 @@
+[
+  {
+    "id": "mtn9r6efqeb9mjk",
+    "username": "admin",
+    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "displayName": "المدير",
+    "role": "admin",
+    "active": true,
+    "createdAt": "2026-09-04T18:10:04.455Z"
+  },
+  {
+    "id": "mtn9r6efpzs8f95",
+    "username": "cashier",
+    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "displayName": "بائع",
+    "role": "cashier",
+    "active": true,
+    "createdAt": "2026-09-04T18:10:04.455Z"
+  }
+]

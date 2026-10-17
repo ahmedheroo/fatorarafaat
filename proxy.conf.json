@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "https://almasa.runasp.net/api",
+    "secure": true,
+    "changeOrigin": true
+  }
+}

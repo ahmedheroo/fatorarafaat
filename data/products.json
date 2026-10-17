@@ -1,0 +1,24 @@
+[
+  {
+    "name": "خبز أبيض",
+    "price": 1,
+    "description": "ربطة خبز أبيض طازج",
+    "sku": "P001",
+    "barcode": "6281000000002",
+    "imageUrl": "",
+    "active": true,
+    "id": "mtn9x6u1ofzwi6d",
+    "createdAt": "2026-09-04T18:14:44.953Z"
+  },
+  {
+    "name": "أرز بسمتي",
+    "price": 18,
+    "description": "أرز بسمتي هندي 1 كجم",
+    "sku": "P002",
+    "barcode": "6281000000004",
+    "imageUrl": "",
+    "active": true,
+    "id": "mtn9x6u1a0vqtnr",
+    "createdAt": "2026-09-04T18:14:44.953Z"
+  }
+]

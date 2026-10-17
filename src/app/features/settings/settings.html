@@ -1,0 +1,72 @@
+<div class="page-header">
+  <h1 class="page-title">الإعدادات</h1>
+</div>
+<div class="card" style="max-width:700px;padding:1.5rem">
+  <form (ngSubmit)="onSave()">
+    <div class="form-group">
+      <label>اسم المحل</label>
+      <input type="text" [(ngModel)]="formData.shopName" name="shopName" required>
+    </div>
+    <div class="form-group">
+      <label>رابط شعار المحل (Logo URL)</label>
+      <input type="text" [(ngModel)]="formData.logoUrl" name="logoUrl" placeholder="https://example.com/logo.png">
+      @if (formData.logoUrl) {
+        <div class="logo-preview">
+          <img [src]="formData.logoUrl" alt="شعار المحل" (error)="logoError = true" [style.display]="logoError ? 'none' : 'block'">
+          @if (logoError) {
+            <p class="logo-error">رابط الصورة غير صالح</p>
+          }
+        </div>
+      }
+    </div>
+    <div class="form-group">
+      <label>عنوان المحل</label>
+      <input type="text" [(ngModel)]="formData.address" name="address">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>رقم الهاتف</label>
+        <input type="text" [(ngModel)]="formData.phone" name="phone">
+      </div>
+      <div class="form-group">
+        <label>الرقم الضريبي</label>
+        <input type="text" [(ngModel)]="formData.taxId" name="taxId">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>نسبة الضريبة (%)</label>
+        <input type="number" [(ngModel)]="formData.taxRate" name="taxRate" min="0" max="100" step="0.1">
+      </div>
+      <div class="form-group">
+        <label>عرض الفاتورة</label>
+        <select [(ngModel)]="formData.receiptWidth" name="receiptWidth">
+          <option value="58mm">58 مم</option>
+          <option value="80mm">80 مم</option>
+        </select>
+      </div>
+    </div>
+
+    <hr style="margin:1.5rem 0;border:none;border-top:1px solid #e5e7eb">
+    <h3 style="margin-bottom:1rem">الفروع</h3>
+
+    @for (branch of formData.branches; track branch.id; let i = $index) {
+      <div class="branch-row">
+        <div class="branch-info">
+          <input type="text" [(ngModel)]="branch.name" [name]="'branch-name-' + i" placeholder="اسم الفرع" class="branch-name-input">
+          <input type="text" [(ngModel)]="branch.address" [name]="'branch-addr-' + i" placeholder="عنوان الفرع" class="branch-addr-input">
+        </div>
+        <label class="toggle-label">
+          <input type="checkbox" [(ngModel)]="branch.isActive" [name]="'branch-active-' + i">
+          <span class="toggle-slider"></span>
+          <span class="toggle-text">تفعيل</span>
+        </label>
+        <button type="button" class="btn btn-danger btn-sm" (click)="removeBranch(i)"><i class="fas fa-trash-alt"></i></button>
+      </div>
+    }
+
+    <button type="button" class="btn btn-secondary" (click)="addBranch()" style="margin-top:0.75rem"><i class="fas fa-plus"></i> فرع جديد</button>
+
+    <button type="submit" class="btn btn-primary btn-lg" style="margin-top:1.5rem"><i class="fas fa-save"></i> حفظ الإعدادات</button>
+  </form>
+</div>

@@ -1,0 +1,114 @@
+[
+  {
+    "id": "mtnc7k87q55k883",
+    "invoiceNumber": 4,
+    "items": [
+      {
+        "productId": "mtn9x6u1a0vqtnr",
+        "productName": "أرز بسمتي",
+        "quantity": 1,
+        "unitPrice": 18,
+        "total": 18
+      },
+      {
+        "productId": "mtn9x6u1ofzwi6d",
+        "productName": "خبز أبيض",
+        "quantity": 1,
+        "unitPrice": 1,
+        "total": 1
+      }
+    ],
+    "subtotal": 19,
+    "discount": 0,
+    "taxRate": 15,
+    "taxAmount": 2.85,
+    "total": 21.85,
+    "paymentMethod": "نقدي",
+    "cashierName": "المدير",
+    "createdAt": "2026-09-04T19:18:48.103Z"
+  },
+  {
+    "id": "mtnbxc3bq04tpqe",
+    "invoiceNumber": 3,
+    "items": [
+      {
+        "productId": "mtn9x6u1a0vqtnr",
+        "productName": "أرز بسمتي",
+        "quantity": 1,
+        "unitPrice": 18,
+        "total": 18
+      },
+      {
+        "productId": "mtn9x6u1ofzwi6d",
+        "productName": "خبز أبيض",
+        "quantity": 1,
+        "unitPrice": 1,
+        "total": 1
+      }
+    ],
+    "subtotal": 19,
+    "discount": 0,
+    "taxRate": 15,
+    "taxAmount": 2.85,
+    "total": 21.85,
+    "paymentMethod": "نقدي",
+    "cashierName": "المدير",
+    "createdAt": "2026-09-04T19:10:50.999Z"
+  },
+  {
+    "id": "mtnbr21rcpl4sop",
+    "invoiceNumber": 2,
+    "items": [
+      {
+        "productId": "mtn9x6u1a0vqtnr",
+        "productName": "أرز بسمتي",
+        "quantity": 1,
+        "unitPrice": 18,
+        "total": 18
+      },
+      {
+        "productId": "mtn9x6u1ofzwi6d",
+        "productName": "خبز أبيض",
+        "quantity": 2,
+        "unitPrice": 1,
+        "total": 2
+      }
+    ],
+    "subtotal": 20,
+    "discount": 0,
+    "taxRate": 15,
+    "taxAmount": 3,
+    "total": 23,
+    "paymentMethod": "نقدي",
+    "cashierName": "المدير",
+    "createdAt": "2026-09-04T19:05:58.047Z"
+  },
+  {
+    "id": "mtna1semdz936c1",
+    "invoiceNumber": 1,
+    "items": [
+      {
+        "productId": "mtn9x6u1a0vqtnr",
+        "productName": "أرز بسمتي",
+        "quantity": 1,
+        "unitPrice": 18,
+        "total": 18
+      },
+      {
+        "productId": "mtn9x6u1ofzwi6d",
+        "productName": "خبز أبيض",
+        "quantity": 1,
+        "unitPrice": 1,
+        "total": 1
+      }
+    ],
+    "subtotal": 19,
+    "discount": 0,
+    "taxRate": 15,
+    "taxAmount": 2.85,
+    "total": 21.85,
+    "paymentMethod": "نقدي",
+    "cashierName": "المدير",
+    "createdAt": "2026-09-04T18:18:19.534Z"
+  }
+]

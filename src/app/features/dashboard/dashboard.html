@@ -1,0 +1,56 @@
+<div class="page-header">
+  <h1 class="page-title">الرئيسية</h1>
+</div>
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+    <div class="stat-value">{{ todaySales().total.toFixed(2) }} ر.س</div>
+    <div class="stat-label">مبيعات اليوم</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"><i class="fas fa-receipt"></i></div>
+    <div class="stat-value">{{ todaySales().count }}</div>
+    <div class="stat-label">عدد الفواتير اليوم</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"><i class="fas fa-boxes"></i></div>
+    <div class="stat-value">{{ productCount() }}</div>
+    <div class="stat-label">إجمالي المنتجات</div>
+  </div>
+</div>
+<div class="dashboard-grid">
+  <div class="card">
+    <div class="card-header">آخر الفواتير</div>
+    <div class="card-body">
+      @if (recentInvoices().length === 0) {
+        <p class="empty-text">لا توجد فواتير بعد</p>
+      }
+      @for (inv of recentInvoices(); track inv.id) {
+        <div class="list-item">
+          <div class="item-info">
+            <span class="item-title">فاتورة #{{ inv.invoiceNumber }}</span>
+            <span class="item-sub">{{ inv.createdAt | arabicDate }}</span>
+          </div>
+          <span class="item-value">{{ inv.total.toFixed(2) }} ر.س</span>
+        </div>
+      }
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">أكثر المنتجات مبيعاً</div>
+    <div class="card-body">
+      @if (topProducts().length === 0) {
+        <p class="empty-text">لا توجد مبيعات بعد</p>
+      }
+      @for (p of topProducts(); track p.name) {
+        <div class="list-item">
+          <div class="item-info">
+            <span class="item-title">{{ p.name }}</span>
+            <span class="item-sub">الكمية: {{ p.count }}</span>
+          </div>
+          <span class="item-value">{{ p.total.toFixed(2) }} ر.س</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>

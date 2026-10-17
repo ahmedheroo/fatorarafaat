@@ -1,0 +1,26 @@
+<div class="page-header">
+  <h1 class="page-title">المستخدمون</h1>
+  <a routerLink="/users/new" class="btn btn-primary">+ إضافة مستخدم</a>
+</div>
+<div class="table-container card">
+  <table>
+    <thead>
+      <tr><th>اسم المستخدم</th><th>الاسم</th><th>الدور</th><th>الحالة</th><th>الإجراءات</th></tr>
+    </thead>
+    <tbody>
+      @for (user of users(); track user.id) {
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ user.displayName }}</td>
+          <td><span class="badge badge-info">{{ user.role === 'admin' ? 'مدير' : 'كاشير' }}</span></td>
+          <td><span class="badge" [class]="user.active ? 'badge-success' : 'badge-danger'">{{ user.active ? 'نشط' : 'معطّل' }}</span></td>
+          <td>
+            <a [routerLink]="['/users', user.id, 'edit']" class="btn btn-sm btn-outline">تعديل</a>
+            <button class="btn btn-sm btn-danger" (click)="confirmDelete(user)">حذف</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+<app-confirm-dialog [isOpen]="showDeleteDialog()" [title]="'حذف مستخدم'" [message]="'هل أنت متأكد من حذف هذا المستخدم؟'" [confirmText]="'حذف'" (confirmed)="onDelete()" (cancelled)="showDeleteDialog.set(false)" />

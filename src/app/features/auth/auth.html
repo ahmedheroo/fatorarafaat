@@ -1,0 +1,25 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-logo"><i class="fas fa-cash-register"></i></div>
+      <h1 class="login-title">نقطة البيع</h1>
+      <p class="login-subtitle">سجّل دخولك للمتابعة</p>
+    </div>
+    <form (ngSubmit)="onLogin()" class="login-form">
+      <div class="form-group">
+        <label for="username">اسم المستخدم</label>
+        <input id="username" type="text" [(ngModel)]="username" name="username" placeholder="أدخل اسم المستخدم" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="password">كلمة المرور</label>
+        <input id="password" type="password" [(ngModel)]="password" name="password" placeholder="أدخل كلمة المرور" required autocomplete="current-password">
+      </div>
+      @if (errorMessage()) {
+        <div class="error-message">{{ errorMessage() }}</div>
+      }
+      <button type="submit" class="btn btn-primary btn-block btn-lg" [disabled]="loading()">
+        {{ loading() ? 'جاري الدخول...' : 'دخول' }}
+      </button>
+    </form>
+  </div>
+</div>

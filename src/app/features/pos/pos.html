@@ -1,0 +1,231 @@
+<div class="pos-layout">
+  <!-- Products Area -->
+  <div class="products-area">
+    <div class="search-bar">
+      <select class="branch-select" [(ngModel)]="selectedBranchId">
+        <option value="" disabled>اختر الفرع أولاً</option>
+        @for (branch of activeBranches(); track branch.id) {
+        <option [value]="branch.id">{{ branch.name }}</option>
+        }
+      </select>
+      <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearch()" placeholder="بحث عن منتج..."
+        class="search-input">
+      <input type="text" [(ngModel)]="barcodeInput" (keyup.enter)="onBarcodeScan()" placeholder="مسح الباركود #"
+        class="barcode-input">
+    </div>
+    <div class="products-grid">
+      @for (product of filteredProducts(); track product.id) {
+      <div class="product-card" (click)="addToCart(product)">
+        <div class="product-image">{{ product.name.charAt(0) }}</div>
+        <div class="product-info">
+          <div class="product-name">{{ product.name }}</div>
+          <div class="product-price">{{ product.price.toFixed(2) }} ر.س</div>
+        </div>
+        <button class="add-btn" (click)="addToCart(product); $event.stopPropagation()"><i
+            class="fas fa-plus"></i></button>
+      </div>
+      }
+      @if (filteredProducts().length === 0) {
+      <div class="empty-products">
+        <p>لا توجد منتجات حالياً.</p>
+      </div>
+      }
+    </div>
+  </div>
+  <!-- Cart Area -->
+  <div class="cart-area">
+    <div class="cart-header">
+      <h2><i class="fas fa-shopping-cart"></i> السلة</h2>
+      <span class="cart-count">{{ cartService.itemCount() }} المنتج</span>
+    </div>
+    <div class="cart-items">
+      @if (cartService.items().length === 0) {
+      <div class="empty-cart">
+        <p>السلة فارغة</p>
+        <p class="empty-hint">أضف منتجات للبدء</p>
+      </div>
+      }
+      @for (item of cartService.items(); track item.product.id) {
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <span class="cart-item-name">{{ item.product.name }}</span>
+          <span class="cart-item-price">{{ item.product.price.toFixed(2) }} ر.س</span>
+        </div>
+        <div class="cart-item-controls">
+          <button class="qty-btn" (click)="cartService.decrementQuantity(item.product.id)"><i
+              class="fas fa-minus"></i></button>
+          <span class="qty-value">{{ item.quantity }}</span>
+          <button class="qty-btn" (click)="cartService.incrementQuantity(item.product.id)"><i
+              class="fas fa-plus"></i></button>
+          <button class="remove-btn" (click)="cartService.removeItem(item.product.id)"><i
+              class="fas fa-times"></i></button>
+        </div>
+      </div>
+      }
+    </div>
+    @if (cartService.items().length > 0) {
+    <div class="cart-footer">
+      <div class="cart-row">
+        <span>المجموع الفرعي</span>
+        <span>{{ cartService.subtotal().toFixed(2) }} ر.س</span>
+      </div>
+      <div class="cart-row">
+        <span>الخصم</span>
+        <input type="number" [(ngModel)]="discountAmount" (ngModelChange)="onDiscountChange()" min="0"
+          class="discount-input" placeholder="0">
+      </div>
+      <div class="cart-row">
+        <span>الضريبة ({{ settings().taxRate }}%)</span>
+        <span>{{ taxAmount().toFixed(2) }} ر.س</span>
+      </div>
+      <div class="cart-row total-row">
+        <span>الإجمالي النهائي</span>
+        <span>{{ finalTotal().toFixed(2) }} ر.س</span>
+      </div>
+      <div class="payment-method">
+        <label>طريقة الدفع</label>
+        <select [(ngModel)]="paymentMethod">
+          <option value="نقدي">نقدي</option>
+          <option value="شبكة">شبكة</option>
+        </select>
+      </div>
+      <button class="btn btn-success btn-block btn-lg checkout-btn" (click)="completeSale()">
+        <i class="fas fa-check-circle"></i> إتمام البيع
+      </button>
+      <button class="btn btn-secondary btn-block clear-btn" (click)="clearCart()"><i class="fas fa-trash-alt"></i> تفريغ
+        السلة</button>
+    </div>
+    }
+  </div>
+</div>
+
+<!-- Mobile Cart Toggle -->
+@if (cartService.itemCount() && !showMobileCart) {
+<button class="mobile-cart-toggle" (click)="showMobileCart = true">
+  <i class="fas fa-shopping-cart"></i> <span class="toggle-badge">{{ cartService.itemCount() }}</span>
+</button>
+}
+
+<!-- Mobile Cart Overlay -->
+@if (showMobileCart) {
+<div class="mobile-cart-overlay" (click)="showMobileCart = false">
+  <div class="mobile-cart-panel" (click)="$event.stopPropagation()">
+    <div class="mobile-cart-header">
+      <h2><i class="fas fa-shopping-cart"></i> السلة</h2>
+      <button class="close-btn" (click)="showMobileCart = false"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cart-items mobile-cart-items">
+      @for (item of cartService.items(); track item.product.id) {
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <span class="cart-item-name">{{ item.product.name }}</span>
+          <span class="cart-item-price">{{ item.product.price.toFixed(2) }} ر.س</span>
+        </div>
+        <div class="cart-item-controls">
+          <button class="qty-btn" (click)="cartService.decrementQuantity(item.product.id)"><i
+              class="fas fa-minus"></i></button>
+          <span class="qty-value">{{ item.quantity }}</span>
+          <button class="qty-btn" (click)="cartService.incrementQuantity(item.product.id)"><i
+              class="fas fa-plus"></i></button>
+          <button class="remove-btn" (click)="cartService.removeItem(item.product.id)"><i
+              class="fas fa-times"></i></button>
+        </div>
+      </div>
+      }
+    </div>
+    <div class="cart-footer">
+      <div class="cart-row">
+        <span>المجموع الفرعي</span>
+        <span>{{ cartService.subtotal().toFixed(2) }} ر.س</span>
+      </div>
+      <div class="cart-row">
+        <span>الخصم</span>
+        <input type="number" [(ngModel)]="discountAmount" (ngModelChange)="onDiscountChange()" min="0"
+          class="discount-input" placeholder="0">
+      </div>
+      <div class="cart-row">
+        <span>الضريبة ({{ settings().taxRate }}%)</span>
+        <span>{{ taxAmount().toFixed(2) }} ر.س</span>
+      </div>
+      <div class="cart-row total-row">
+        <span>المجموع النهائي</span>
+        <span>{{ finalTotal().toFixed(2) }} ر.س</span>
+      </div>
+      <div class="payment-method">
+        <select [(ngModel)]="paymentMethod">
+          <option value="نقدي">نقدي</option>
+          <option value="شبكة">شبكة</option>
+        </select>
+      </div>
+      <button class="btn btn-success btn-block btn-lg checkout-btn" (click)="completeSale()"><i
+          class="fas fa-check-circle"></i> إتمام البيع</button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Print Invoice (hidden) -->
+<div class="print-area" #printArea>
+  @if (lastInvoice) {
+  <div class="invoice-print" dir="rtl">
+    <div class="inv-header">
+      @if (settings().logoUrl) {
+      <div class="inv-logo"><img [src]="settings().logoUrl" alt=""></div>
+      }
+      <div class="inv-shop">{{ settings().shopName }}</div>
+      <div class="inv-addr">{{ settings().address }}</div>
+      @if (selectedBranch()) {
+      <div class="inv-branch">الفرع: {{ selectedBranch()!.name }}</div>
+      }
+      <div class="inv-phone">هاتف: {{ settings().phone }}</div>
+      <div class="inv-taxid">الرقم الضريبي: {{ settings().taxId }}</div>
+    </div>
+    <div class="inv-meta">
+      <div>رقم الفاتورة: {{ lastInvoice.invoiceNumber }}</div>
+      <div>التاريخ: {{ lastInvoice.createdAt | arabicDate }}</div>
+      <div>الوقت: {{ lastInvoice.createdAt | arabicTime }}</div>
+      <div>الكاشير: {{ lastInvoice.cashierName }}</div>
+      <div>طريقة الدفع: {{ lastInvoice.paymentMethod }}</div>
+    </div>
+    <hr class="inv-divider">
+    <table class="inv-table">
+      <thead>
+        <tr>
+          <th>المنتج</th>
+          <th>الكمية</th>
+          <th>السعر</th>
+          <th>الإجمالي</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of lastInvoice.items; track item.productId) {
+        <tr>
+          <td>{{ item.productName }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.unitPrice.toFixed(2) }} ر.س</td>
+          <td>{{ item.total.toFixed(2) }} ر.س</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    <hr class="inv-divider">
+
+    <div class="inv-totals">
+      <div class="inv-row"><span>المجموع:</span><span>{{ lastInvoice.subtotal.toFixed(2) }} ر.س</span></div>
+      @if (lastInvoice.discount > 0) { <div class="inv-row"><span>الخصم:</span><span>-{{ lastInvoice.discount.toFixed(2)
+          }}</span>ر.س</div> }
+      <div class="inv-row"><span>ضريبة البيع ({{ lastInvoice.taxRate }}%):</span><span>{{
+          lastInvoice.taxAmount.toFixed(2) }} ر.س</span></div>
+      <div class="inv-row inv-total"><span>المجموع النهائي:</span><span>{{ lastInvoice.total.toFixed(2) }} ر.س</span>
+      </div>
+    </div>
+
+    <hr class="inv-divider">
+    <div class="inv-footer">
+      <p>شكراً لزيارتكم</p>
+      <p class="inv-shop-name">{{ settings().shopName }} - {{ selectedBranch()!.name }}</p>
+      <div id="qrCode" class="qr-code"></div>
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,88 @@
+<div class="page-header no-print">
+  <h1 class="page-title">المصروفات</h1>
+</div>
+
+<div class="card expenses-page no-print" style="max-width:900px">
+  <div class="expenses-toolbar">
+    <button class="btn btn-primary" (click)="showAddModal = true">
+      <i class="fas fa-plus"></i> إضافة مصروف
+    </button>
+  </div>
+
+  <div class="expense-table-wrapper">
+    <table class="expense-table">
+      <thead>
+        <tr>
+          <th>تاريخ الإضافة</th>
+          <th>العنوان</th>
+          <th>الفرع</th>
+          <th class="text-right">المبلغ (ر.س)</th>
+          <th>الوصف</th>
+          <th class="text-center">إجراء</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (exp of expenses(); track exp.id) {
+          <tr>
+            <td>{{ exp.createdAt | arabicDate }}</td>
+            <td>{{ exp.title }}</td>
+            <td>{{ exp.branchName }}</td>
+            <td class="text-right">{{ exp.amount.toFixed(2) }}</td>
+            <td>{{ exp.description }}</td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-danger" (click)="deleteExpense(exp.id)">
+                <i class="fas fa-trash-alt"></i> حذف
+              </button>
+            </td>
+          </tr>
+        }
+        @if (expenses().length === 0) {
+          <tr>
+            <td colspan="6" class="text-center empty-state">لا توجد مصروفات حتى الآن</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add Expense Modal -->
+@if (showAddModal) {
+  <div class="modal-overlay" (click)="showAddModal = false">
+    <div class="modal-panel" (click)="$event.stopPropagation()" style="width:420px">
+      <div class="modal-header">
+        <h3>إضافة مصروف جديد</h3>
+        <button class="close-btn" (click)="showAddModal = false"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>عنوان المصروف</label>
+          <input type="text" [(ngModel)]="newExpense.title" placeholder="مثال: فاتورة كهرباء" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>المبلغ (ر.س)</label>
+          <input type="number" [(ngModel)]="newExpense.amount" placeholder="0.00" class="form-control" min="0" step="0.01">
+        </div>
+        <div class="form-group">
+          <label>الفرع</label>
+          <select [(ngModel)]="newExpense.branchId" class="form-control">
+            <option value="" disabled>اختر الفرع</option>
+            @for (b of branches(); track b.id) {
+              <option [value]="b.id">{{ b.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label>الوصف</label>
+          <textarea [(ngModel)]="newExpense.description" placeholder="تفاصيل إضافية..." class="form-control" rows="2"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="showAddModal = false">إلغاء</button>
+        <button class="btn btn-primary" (click)="saveExpense()" [disabled]="!canSave()">
+          <i class="fas fa-save"></i> حفظ
+        </button>
+      </div>
+    </div>
+  </div>
+}

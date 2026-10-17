@@ -1,0 +1,104 @@
+<div class="page-header no-print">
+  <h1 class="page-title">فاتورة #{{ invoice()?.invoiceNumber }}</h1>
+  <div>
+    <button class="btn btn-primary" (click)="printInvoice()"><i class="fas fa-print"></i> طباعة</button>
+    <a routerLink="/invoices" class="btn btn-secondary">العودة</a>
+  </div>
+</div>
+@if (invoice(); as inv) {
+  <!-- Screen view -->
+  <div class="card screen-only" style="max-width:700px;padding:1.5rem">
+    <div class="inv-section">
+      <h3>بيانات الفاتورة</h3>
+      <p><strong>رقم الفاتورة:</strong> #{{ inv.invoiceNumber }}</p>
+      <p><strong>التاريخ:</strong> {{ inv.createdAt | arabicDate }}</p>
+      <p><strong>الوقت:</strong> {{ inv.createdAt | arabicTime }}</p>
+      <p><strong>الفرع:</strong> {{ inv.branchName }}</p>
+      <p><strong>الكاشير:</strong> {{ inv.cashierName }}</p>
+      <p><strong>طريقة الدفع:</strong> {{ inv.paymentMethod }}</p>
+    </div>
+    <table class="inv-items-table">
+      <thead>
+        <tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr>
+      </thead>
+      <tbody>
+        @for (item of inv.items; track item.productId) {
+          <tr>
+            <td>{{ item.productName }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.unitPrice.toFixed(2) }}</td>
+            <td>{{ item.total.toFixed(2) }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <div class="inv-totals">
+      <div class="inv-total-row"><span>المجموع:</span><span>{{ inv.subtotal.toFixed(2) }} ر.س</span></div>
+      @if (inv.discount > 0) {
+        <div class="inv-total-row"><span>الخصم:</span><span>-{{ inv.discount.toFixed(2) }} ر.س</span></div>
+      }
+      <div class="inv-total-row"><span>الضريبة ({{ inv.taxRate }}%):</span><span>{{ inv.taxAmount.toFixed(2) }} ر.س</span></div>
+      <div class="inv-total-row inv-grand-total"><span>الإجمالي النهائي:</span><span>{{ inv.total.toFixed(2) }} ر.س</span></div>
+    </div>
+    <div style="text-align:center;margin-top:1rem;">
+      @if (qrDataUrl()) {
+        <img [src]="qrDataUrl()" alt="QR كود" width="150" height="150">
+      }
+    </div>
+  </div>
+
+  <!-- Print-only thermal receipt -->
+  <div class="print-receipt print-only">
+    <div class="pr-header">
+      @if (settings().logoUrl) {
+        <div class="pr-logo"><img [src]="settings().logoUrl" alt=""></div>
+      }
+      <div class="pr-shop">{{ settings().shopName }}</div>
+      <div class="pr-addr">{{ settings().address }}</div>
+      @if (inv.branchName) {
+        <div class="pr-branch">الفرع: {{ inv.branchName }}</div>
+      }
+      <div class="pr-phone">هاتف: {{ settings().phone }}</div>
+      <div class="pr-taxid">الرقم الضريبي: {{ settings().taxId }}</div>
+    </div>
+    <div class="pr-meta">
+      <div>رقم الفاتورة: {{ inv.invoiceNumber }}</div>
+      <div>التاريخ: {{ inv.createdAt | arabicDate }}</div>
+      <div>الوقت: {{ inv.createdAt | arabicTime }}</div>
+      <div>الكاشير: {{ inv.cashierName }}</div>
+      <div>طريقة الدفع: {{ inv.paymentMethod }}</div>
+    </div>
+    <hr class="pr-divider">
+    <table class="pr-table">
+      <thead>
+        <tr><th>المنتج</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>
+      </thead>
+      <tbody>
+        @for (item of inv.items; track item.productId) {
+          <tr>
+            <td>{{ item.productName }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.unitPrice.toFixed(2) }}</td>
+            <td>{{ item.total.toFixed(2) }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <hr class="pr-divider">
+    <div class="pr-totals">
+      <div class="pr-row"><span>المجموع:</span><span>{{ inv.subtotal.toFixed(2) }} ر.س</span></div>
+      @if (inv.discount > 0) {
+        <div class="pr-row"><span>الخصم:</span><span>-{{ inv.discount.toFixed(2) }} ر.س</span></div>
+      }
+      <div class="pr-row"><span>ضريبة القيمة المضافة ({{ inv.taxRate }}%):</span><span>{{ inv.taxAmount.toFixed(2) }} ر.س</span></div>
+      <div class="pr-row pr-grand"><span>المجموع النهائي:</span><span>{{ inv.total.toFixed(2) }} ر.س</span></div>
+    </div>
+    <div class="pr-footer">
+      <p>شكراً لزيارتكم</p>
+      <p class="pr-shop-name">{{ settings().shopName }} - {{ inv.branchName }}</p>
+      @if (qrDataUrl()) {
+        <img [src]="qrDataUrl()" alt="QR كود" style="width:35mm;height:35mm;image-rendering:pixelated;">
+      }
+    </div>
+  </div>
+}

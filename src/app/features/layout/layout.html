@@ -1,0 +1,61 @@
+<div class="layout">
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed()">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class="fas fa-cash-register logo-icon"></i>
+        @if (!sidebarCollapsed()) {
+          <span class="logo-text">نقطة البيع</span>
+        }
+      </div>
+      <button class="sidebar-toggle" (click)="toggleSidebar()">
+        {{ sidebarCollapsed() ? '☰' : '✕' }}
+      </button>
+    </div>
+    <nav class="sidebar-nav">
+      @for (item of navItems(); track item.route) {
+        <a class="nav-item" [routerLink]="item.route" routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: item.exact}">
+          <i [class]="item.icon" class="nav-icon"></i>
+          @if (!sidebarCollapsed()) {
+            <span class="nav-label">{{ item.label }}</span>
+          }
+          @if (item.route === '/pos' && cartService.itemCount() > 0) {
+            <span class="nav-badge">{{ cartService.itemCount() }}</span>
+          }
+        </a>
+      }
+    </nav>
+    <div class="sidebar-footer">
+      @if (!sidebarCollapsed()) {
+        <div class="user-info">
+          <span class="user-name">{{ authService.currentUser()?.displayName }}</span>
+          <span class="user-role">{{ authService.currentUser()?.role === 'admin' ? 'مدير' : 'كاشير' }}</span>
+        </div>
+      }
+      <button class="nav-item logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt nav-icon"></i>
+        @if (!sidebarCollapsed()) {
+          <span class="nav-label">تسجيل الخروج</span>
+        }
+      </button>
+    </div>
+  </aside>
+  <main class="main-content"><router-outlet /></main>
+  <nav class="mobile-nav">
+    @for (item of mobileNavItems(); track item.route) {
+      <a class="mobile-nav-item" [routerLink]="item.route" routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact: item.exact}">
+        <i [class]="item.icon" class="mobile-nav-icon"></i>
+        <span class="mobile-nav-label">{{ item.label }}</span>
+        @if (item.route === '/pos' && cartService.itemCount() > 0) {
+          <span class="mobile-badge">{{ cartService.itemCount() }}</span>
+        }
+      </a>
+    }
+    <button class="mobile-nav-item" (click)="logout()">
+      <i class="fas fa-sign-out-alt mobile-nav-icon"></i>
+      <span class="mobile-nav-label">خروج</span>
+    </button>
+  </nav>
+  <app-toast />
+</div>

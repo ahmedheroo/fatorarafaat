@@ -1,0 +1,43 @@
+<div class="page-header">
+  <h1 class="page-title">{{ isEdit() ? 'تعديل منتج' : 'إضافة منتج' }}</h1>
+  <a routerLink="/products" class="btn btn-secondary">العودة</a>
+</div>
+<div class="card" style="max-width:600px;padding:1.5rem">
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>اسم المنتج</label>
+      <input type="text" [(ngModel)]="formData.name" name="name" required placeholder="أدخل اسم المنتج">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>السعر (ر.س)</label>
+        <input type="number" [(ngModel)]="formData.price" name="price" min="0" step="0.01" required>
+      </div>
+      <div class="form-group">
+        <label>SKU</label>
+        <input type="text" [(ngModel)]="formData.sku" name="sku" placeholder="P001">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>الباركود</label>
+        <input type="text" [(ngModel)]="formData.barcode" name="barcode" placeholder="6281000000000">
+      </div>
+      <div class="form-group">
+        <label>الحالة</label>
+        <select [(ngModel)]="formData.active" name="active">
+          <option [ngValue]="true">متاح</option>
+          <option [ngValue]="false">غير متاح</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>الوصف</label>
+      <textarea [(ngModel)]="formData.description" name="description" rows="3" placeholder="وصف المنتج"></textarea>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary btn-lg">{{ isEdit() ? 'حفظ التعديلات' : 'إضافة المنتج' }}</button>
+      <a routerLink="/products" class="btn btn-secondary btn-lg">إلغاء</a>
+    </div>
+  </form>
+</div>

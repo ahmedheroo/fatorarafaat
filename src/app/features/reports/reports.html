@@ -1,0 +1,90 @@
+<div class="page-header no-print">
+  <h1 class="page-title">التقارير</h1>
+</div>
+
+<div class="card reports-page no-print" style="max-width:900px">
+  <div class="reports-filters">
+    <div class="filter-group">
+      <label>من تاريخ</label>
+      <input type="date" [(ngModel)]="fromDate" (ngModelChange)="buildReport()" class="form-control">
+    </div>
+    <div class="filter-group">
+      <label>إلى تاريخ</label>
+      <input type="date" [(ngModel)]="toDate" (ngModelChange)="buildReport()" class="form-control">
+    </div>
+    <div class="filter-group">
+      <label>الفرع</label>
+      <select [(ngModel)]="selectedBranchId" (ngModelChange)="buildReport()" class="form-control">
+        <option value="">الفرع</option>
+        @for (b of branches(); track b.id) {
+          <option [value]="b.id">{{ b.name }}</option>
+        }
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>&nbsp;</label>
+      <button class="btn btn-primary" (click)="exportExcel()" [disabled]="!canExport()">
+        <i class="fas fa-file-export"></i> Export Excel
+      </button>
+    </div>
+  </div>
+
+  @if (summary()) {
+    <div class="report-summary">
+      <div class="summary-row">
+        <span>فترة الزمن:</span>
+        <span>{{ summary()!.fromDate }} - {{ summary()!.toDate }}</span>
+      </div>
+      <div class="summary-row">
+        <span>الفرع:</span>
+        <span>{{ summary()!.branchName }}</span>
+      </div>
+      <div class="summary-row total-row">
+        <span>إجمالي المبيعات:</span>
+        <span>{{ summary()!.totalSales.toFixed(2) }} ر.س</span>
+      </div>
+      <div class="summary-row">
+        <span>إجمالي المصروفات:</span>
+        <span>{{ summary()!.totalExpenses.toFixed(2) }} ر.س</span>
+      </div>
+      <div class="summary-row net-row">
+        <span>صافي الربح:</span>
+        <span>{{ summary()!.netProfit.toFixed(2) }} ر.س</span>
+      </div>
+    </div>
+  }
+
+  <div class="report-table-wrapper">
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>تاريخ</th>
+          <th>الفرع</th>
+          <th>نوع العملية</th>
+          <th class="text-right">المبلغ (ر.س)</th>
+          <th>ملاحظات</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of reportRows(); track row.id) {
+          <tr>
+            <td>{{ row.date }}</td>
+            <td>{{ row.branchName }}</td>
+            <td>
+              <span class="badge" [class.sale]="row.type === 'sale'" [class.expense]="row.type === 'expense'">
+                {{ row.type === 'sale' ? 'بيع' : 'مصروف' }}
+              </span>
+            </td>
+            <td class="text-right">{{ row.amount.toFixed(2) }}</td>
+            <td>{{ row.note }}</td>
+          </tr>
+        }
+        @if (reportRows().length === 0) {
+          <tr>
+            <td colspan="5" class="text-center empty-state">لا توجد بيانات لهذه الفترة</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

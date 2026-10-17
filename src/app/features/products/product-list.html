@@ -1,0 +1,30 @@
+<div class="page-header">
+  <h1 class="page-title">المنتجات</h1>
+  <a routerLink="/products/new" class="btn btn-primary">+ إضافة منتج</a>
+</div>
+<div class="search-section">
+  <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="filterProducts()" placeholder="بحث عن منتج...">
+</div>
+<div class="products-grid">
+  @for (product of filteredProducts(); track product.id) {
+    <div class="product-card card">
+      <div class="product-img">{{ product.name.charAt(0) }}</div>
+      <div class="product-body">
+        <div class="product-name">{{ product.name }}</div>
+        <div class="product-price">{{ product.price.toFixed(2) }} ر.س</div>
+        <div class="product-sku">SKU: {{ product.sku }}</div>
+        <span class="badge" [class]="product.active ? 'badge-success' : 'badge-danger'">
+          {{ product.active ? 'متاح' : 'غير متاح' }}
+        </span>
+        <div class="product-actions">
+          <a [routerLink]="['/products', product.id, 'edit']" class="btn btn-sm btn-outline">تعديل</a>
+          <button class="btn btn-sm btn-danger" (click)="confirmDelete(product)">حذف</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+@if (filteredProducts().length === 0) {
+  <div class="empty-state-box">لا توجد منتجات</div>
+}
+<app-confirm-dialog [isOpen]="showDeleteDialog()" [title]="'حذف منتج'" [message]="'هل أنت متأكد من حذف هذا المنتج؟'" [confirmText]="'حذف'" (confirmed)="onDelete()" (cancelled)="showDeleteDialog.set(false)" />
