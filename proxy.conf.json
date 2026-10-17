@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://almasa.runasp.net/api",
+    "target": "https://fatorarafaat.runasp.net/api",
     "secure": true,
     "changeOrigin": true
   }

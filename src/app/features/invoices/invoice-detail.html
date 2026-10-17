@@ -37,7 +37,6 @@
       @if (inv.discount > 0) {
         <div class="inv-total-row"><span>الخصم:</span><span>-{{ inv.discount.toFixed(2) }} ر.س</span></div>
       }
-      <div class="inv-total-row"><span>الضريبة ({{ inv.taxRate }}%):</span><span>{{ inv.taxAmount.toFixed(2) }} ر.س</span></div>
       <div class="inv-total-row inv-grand-total"><span>الإجمالي النهائي:</span><span>{{ inv.total.toFixed(2) }} ر.س</span></div>
     </div>
     <div style="text-align:center;margin-top:1rem;">
@@ -59,7 +58,6 @@
         <div class="pr-branch">الفرع: {{ inv.branchName }}</div>
       }
       <div class="pr-phone">هاتف: {{ settings().phone }}</div>
-      <div class="pr-taxid">الرقم الضريبي: {{ settings().taxId }}</div>
     </div>
     <div class="pr-meta">
       <div>رقم الفاتورة: {{ inv.invoiceNumber }}</div>
@@ -90,7 +88,6 @@
       @if (inv.discount > 0) {
         <div class="pr-row"><span>الخصم:</span><span>-{{ inv.discount.toFixed(2) }} ر.س</span></div>
       }
-      <div class="pr-row"><span>ضريبة القيمة المضافة ({{ inv.taxRate }}%):</span><span>{{ inv.taxAmount.toFixed(2) }} ر.س</span></div>
       <div class="pr-row pr-grand"><span>المجموع النهائي:</span><span>{{ inv.total.toFixed(2) }} ر.س</span></div>
     </div>
     <div class="pr-footer">

@@ -26,11 +26,9 @@ export class InvoiceService {
     const items = this.cartService.items();
     const discount = this.cartService.discount();
     const subtotal = this.cartService.subtotal();
-    const settings = this.settingsService.settings();
     const currentUser = this.authService.currentUser();
 
-    const taxAmount = Math.round((subtotal - discount) * settings.taxRate / 100 * 100) / 100;
-    const total = Math.round((subtotal - discount + taxAmount) * 100) / 100;
+    const total = Math.round((subtotal - discount) * 100) / 100;
 
     const invoiceItems: InvoiceItem[] = items.map(item => ({
       productId: item.product.id,
@@ -46,8 +44,6 @@ export class InvoiceService {
       items: invoiceItems,
       subtotal: Math.round(subtotal * 100) / 100,
       discount: Math.round(discount * 100) / 100,
-      taxRate: settings.taxRate,
-      taxAmount,
       total,
       paymentMethod,
       cashierName: currentUser?.displayName ?? 'غير معروف',

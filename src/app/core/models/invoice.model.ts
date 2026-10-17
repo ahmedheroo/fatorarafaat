@@ -14,8 +14,6 @@ export interface Invoice {
   items: InvoiceItem[];
   subtotal: number;
   discount: number;
-  taxRate: number;
-  taxAmount: number;
   total: number;
   paymentMethod: PaymentMethod;
   cashierName: string;

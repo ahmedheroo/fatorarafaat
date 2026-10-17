@@ -5,7 +5,7 @@ import { SettingsService } from '../../core/services/settings.service';
 import { Invoice } from '../../core/models';
 import { ArabicDatePipe } from '../../shared/pipes/date.pipe';
 import { ArabicTimePipe } from '../../shared/pipes/time.pipe';
-import { encodeZatcaQr, formatZatcaTimestamp, formatZatcaAmount } from '../../core/utils/zatca-qr';
+import { buildReceiptQr } from '../../core/utils/zatca-qr';
 import QRCode from 'qrcode';
 
 @Component({
@@ -90,15 +90,9 @@ export class InvoiceDetail implements OnInit {
 
   private generateQr(inv: Invoice): void {
     const s = this.settings();
-    const qrBase64 = encodeZatcaQr({
-      sellerName: s.shopName,
-      vatNumber: s.taxId,
-      timestamp: formatZatcaTimestamp(inv.createdAt),
-      invoiceTotal: formatZatcaAmount(inv.total),
-      vatTotal: formatZatcaAmount(inv.taxAmount),
-    });
+    const qrText = buildReceiptQr(s.shopName, inv.items, inv.total);
 
-    this.qrReady = QRCode.toDataURL(qrBase64, { width: 400, margin: 1 }).then(async url => {
+    this.qrReady = QRCode.toDataURL(qrText, { width: 400, margin: 1 }).then(async url => {
       this.qrDataUrl.set(url);
       await this.waitForQrImage(url);
     }).catch(() => { /* ignore */ });

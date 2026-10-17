@@ -23,8 +23,8 @@ export class Layout {
     { icon: 'fas fa-box-open', label: 'المنتجات', route: '/products', exact: false, adminOnly: true },
     { icon: 'fas fa-file-invoice-dollar', label: 'الفواتير', route: '/invoices', exact: false, adminOnly: true },
     { icon: 'fas fa-users', label: 'المستخدمين', route: '/users', exact: false, adminOnly: true },
-    { icon: 'fas fa-wallet', label: 'المصروفات', route: '/expenses', exact: false, adminOnly: true },
-    { icon: 'fas fa-chart-bar', label: 'التقارير', route: '/reports', exact: false, adminOnly: true },
+    // { icon: 'fas fa-wallet', label: 'المصروفات', route: '/expenses', exact: false, adminOnly: true },
+    //{ icon: 'fas fa-chart-bar', label: 'التقارير', route: '/reports', exact: false, adminOnly: true },
     { icon: 'fas fa-cog', label: 'الاعدادات', route: '/settings', exact: false, adminOnly: true },
   ];
 
@@ -33,8 +33,8 @@ export class Layout {
     { icon: 'fas fa-cash-register', label: 'نقطة البيع', route: '/pos', exact: false, adminOnly: false },
     { icon: 'fas fa-box-open', label: 'المنتجات', route: '/products', exact: false, adminOnly: true },
     { icon: 'fas fa-file-invoice-dollar', label: 'الفواتير', route: '/invoices', exact: false, adminOnly: true },
-    { icon: 'fas fa-wallet', label: 'المصروفات', route: '/expenses', exact: false, adminOnly: true },
-    { icon: 'fas fa-chart-bar', label: 'التقارير', route: '/reports', exact: false, adminOnly: true },
+    // { icon: 'fas fa-wallet', label: 'المصروفات', route: '/expenses', exact: false, adminOnly: true },
+   // { icon: 'fas fa-chart-bar', label: 'التقارير', route: '/reports', exact: false, adminOnly: true },
     { icon: 'fas fa-cog', label: 'الاعدادات', route: '/settings', exact: false, adminOnly: true },
   ];
 

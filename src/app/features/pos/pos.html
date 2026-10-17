@@ -74,10 +74,6 @@
         <input type="number" [(ngModel)]="discountAmount" (ngModelChange)="onDiscountChange()" min="0"
           class="discount-input" placeholder="0">
       </div>
-      <div class="cart-row">
-        <span>الضريبة ({{ settings().taxRate }}%)</span>
-        <span>{{ taxAmount().toFixed(2) }} ر.س</span>
-      </div>
       <div class="cart-row total-row">
         <span>الإجمالي النهائي</span>
         <span>{{ finalTotal().toFixed(2) }} ر.س</span>
@@ -143,10 +139,6 @@
         <input type="number" [(ngModel)]="discountAmount" (ngModelChange)="onDiscountChange()" min="0"
           class="discount-input" placeholder="0">
       </div>
-      <div class="cart-row">
-        <span>الضريبة ({{ settings().taxRate }}%)</span>
-        <span>{{ taxAmount().toFixed(2) }} ر.س</span>
-      </div>
       <div class="cart-row total-row">
         <span>المجموع النهائي</span>
         <span>{{ finalTotal().toFixed(2) }} ر.س</span>
@@ -178,7 +170,6 @@
       <div class="inv-branch">الفرع: {{ selectedBranch()!.name }}</div>
       }
       <div class="inv-phone">هاتف: {{ settings().phone }}</div>
-      <div class="inv-taxid">الرقم الضريبي: {{ settings().taxId }}</div>
     </div>
     <div class="inv-meta">
       <div>رقم الفاتورة: {{ lastInvoice.invoiceNumber }}</div>
@@ -214,8 +205,6 @@
       <div class="inv-row"><span>المجموع:</span><span>{{ lastInvoice.subtotal.toFixed(2) }} ر.س</span></div>
       @if (lastInvoice.discount > 0) { <div class="inv-row"><span>الخصم:</span><span>-{{ lastInvoice.discount.toFixed(2)
           }}</span>ر.س</div> }
-      <div class="inv-row"><span>ضريبة البيع ({{ lastInvoice.taxRate }}%):</span><span>{{
-          lastInvoice.taxAmount.toFixed(2) }} ر.س</span></div>
       <div class="inv-row inv-total"><span>المجموع النهائي:</span><span>{{ lastInvoice.total.toFixed(2) }} ر.س</span>
       </div>
     </div>

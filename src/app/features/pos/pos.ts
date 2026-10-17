@@ -8,7 +8,7 @@ import { ToastService } from '../../core/services/toast.service';
 import { Product, Invoice, PaymentMethod, Branch } from '../../core/models';
 import { ArabicDatePipe } from '../../shared/pipes/date.pipe';
 import { ArabicTimePipe } from '../../shared/pipes/time.pipe';
-import { encodeZatcaQr, formatZatcaTimestamp, formatZatcaAmount } from '../../core/utils/zatca-qr';
+import { buildReceiptQr } from '../../core/utils/zatca-qr';
 import QRCode from 'qrcode';
 
 @Component({
@@ -45,18 +45,10 @@ export class Pos implements OnInit {
     this.settings().branches.find(b => b.id === this.selectedBranchId())
   );
 
-  taxAmount = computed(() => {
-    const sub = this.cartService.subtotal();
-    const disc = this.discountAmount;
-    const rate = this.settings().taxRate;
-    return Math.round((sub - disc) * rate / 100 * 100) / 100;
-  });
-
   finalTotal = computed(() => {
     const sub = this.cartService.subtotal();
     const disc = this.discountAmount;
-    const tax = this.taxAmount();
-    return Math.max(0, Math.round((sub - disc + tax) * 100) / 100);
+    return Math.max(0, Math.round((sub - disc) * 100) / 100);
   });
 
   ngOnInit(): void {
@@ -130,16 +122,10 @@ export class Pos implements OnInit {
     if (!qrEl || !invoice) return;
 
     const s = this.settings();
-    const qrBase64 = encodeZatcaQr({
-      sellerName: s.shopName,
-      vatNumber: s.taxId,
-      timestamp: formatZatcaTimestamp(invoice.createdAt),
-      invoiceTotal: formatZatcaAmount(invoice.total),
-      vatTotal: formatZatcaAmount(invoice.taxAmount),
-    });
+    const qrText = buildReceiptQr(s.shopName, invoice.items, invoice.total);
 
     try {
-      const url = await QRCode.toDataURL(qrBase64, { width: 150, margin: 1 });
+      const url = await QRCode.toDataURL(qrText, { width: 150, margin: 1 });
       const image = new Image();
       image.width = 150;
       image.height = 150;

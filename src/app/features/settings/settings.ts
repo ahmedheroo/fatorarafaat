@@ -32,7 +32,7 @@ export class SettingsPage implements OnInit {
 
   logoError = false;
   formData: Settings = {
-    shopName: '', address: '', phone: '', taxId: '', taxRate: 15, receiptWidth: '80mm', logoUrl: '', branches: []
+    shopName: '', address: '', phone: '', receiptWidth: '80mm', logoUrl: '', branches: []
   };
 
   ngOnInit(): void {

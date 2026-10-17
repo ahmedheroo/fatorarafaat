@@ -131,7 +131,7 @@
           "builder": "angular-cli-ghpages:deploy",
           "options": {
             "branch": "gh-pages",
-            "cname":"almasa.ahmed-hassan.site"
+            "cname":"fatora.dar-elabrar.com"
           }
         }
       }
