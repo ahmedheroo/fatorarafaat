@@ -29,6 +29,9 @@ export class Pos implements OnInit {
   searchQuery = '';
   barcodeInput = '';
   discountAmount = 0;
+  customerName = '';
+  customerPhone = '';
+  guestsCount: number | null = null;
   paymentMethod: PaymentMethod = PaymentMethod.CASH;
   showMobileCart = false;
   lastInvoice: Invoice | null = null;
@@ -92,6 +95,9 @@ export class Pos implements OnInit {
   clearCart(): void {
     this.cartService.clear();
     this.discountAmount = 0;
+    this.customerName = '';
+    this.customerPhone = '';
+    this.guestsCount = null;
     this.showMobileCart = false;
   }
 
@@ -104,8 +110,15 @@ export class Pos implements OnInit {
       this.toast.error('يجب اختيار الفرع أولاً');
       return;
     }
-    this.lastInvoice = await this.invoiceService.completeSale(this.paymentMethod, this.selectedBranch()!.name);
+    this.lastInvoice = await this.invoiceService.completeSale(this.paymentMethod, this.selectedBranch()!.name, {
+      name: this.customerName,
+      phone: this.customerPhone,
+      guests: this.guestsCount
+    });
     this.discountAmount = 0;
+    this.customerName = '';
+    this.customerPhone = '';
+    this.guestsCount = null;
     this.showMobileCart = false;
     this.toast.success('تم إتمام البيع بنجاح');
 

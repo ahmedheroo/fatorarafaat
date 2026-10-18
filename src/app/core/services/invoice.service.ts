@@ -22,7 +22,11 @@ export class InvoiceService {
     this._invoices.set(invoices);
   }
 
-  async completeSale(paymentMethod: PaymentMethod, branchName: string): Promise<Invoice> {
+  async completeSale(
+    paymentMethod: PaymentMethod,
+    branchName: string,
+    customer: { name?: string; phone?: string; guests?: number | null } = {}
+  ): Promise<Invoice> {
     const items = this.cartService.items();
     const discount = this.cartService.discount();
     const subtotal = this.cartService.subtotal();
@@ -48,6 +52,9 @@ export class InvoiceService {
       paymentMethod,
       cashierName: currentUser?.displayName ?? 'غير معروف',
       branchName,
+      customerName: customer.name?.trim() ?? '',
+      customerPhone: customer.phone?.trim() ?? '',
+      guestsCount: customer.guests && customer.guests > 0 ? Math.floor(customer.guests) : 0,
       createdAt: new Date().toISOString()
     };
 
@@ -65,7 +72,9 @@ export class InvoiceService {
     const q = query.trim();
     if (!q) return this._invoices();
     return this._invoices().filter(inv =>
-      inv.invoiceNumber.toString().includes(q)
+      inv.invoiceNumber.toString().includes(q) ||
+      (inv.customerName || '').includes(q) ||
+      (inv.customerPhone || '').includes(q)
     );
   }
 

@@ -247,6 +247,9 @@ app.post('/api/invoices', (req, res) => {
     total: Number(req.body.total) || 0,
     paymentMethod: req.body.paymentMethod || '',
     cashierName: req.body.cashierName || '',
+    customerName: (req.body.customerName || '').trim(),
+    customerPhone: (req.body.customerPhone || '').trim(),
+    guestsCount: Number(req.body.guestsCount) || 0,
     createdAt: req.body.createdAt || new Date().toISOString(),
     items: (req.body.items || []).map((it) => ({
       productId: it.productId || '',

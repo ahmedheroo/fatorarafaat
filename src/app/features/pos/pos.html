@@ -78,6 +78,14 @@
         <span>الإجمالي النهائي</span>
         <span>{{ finalTotal().toFixed(2) }} ر.س</span>
       </div>
+      <div class="customer-fields">
+        <label>بيانات العميل (اختياري)</label>
+        <input type="text" [(ngModel)]="customerName" placeholder="اسم العميل" class="customer-input">
+        <div class="customer-row">
+          <input type="tel" [(ngModel)]="customerPhone" placeholder="جوال العميل" class="customer-input" dir="ltr">
+          <input type="number" [(ngModel)]="guestsCount" placeholder="عدد الأفراد" min="1" class="customer-input guests-input">
+        </div>
+      </div>
       <div class="payment-method">
         <label>طريقة الدفع</label>
         <select [(ngModel)]="paymentMethod">
@@ -143,6 +151,14 @@
         <span>المجموع النهائي</span>
         <span>{{ finalTotal().toFixed(2) }} ر.س</span>
       </div>
+      <div class="customer-fields">
+        <label>بيانات العميل (اختياري)</label>
+        <input type="text" [(ngModel)]="customerName" placeholder="اسم العميل" class="customer-input">
+        <div class="customer-row">
+          <input type="tel" [(ngModel)]="customerPhone" placeholder="جوال العميل" class="customer-input" dir="ltr">
+          <input type="number" [(ngModel)]="guestsCount" placeholder="عدد الأفراد" min="1" class="customer-input guests-input">
+        </div>
+      </div>
       <div class="payment-method">
         <select [(ngModel)]="paymentMethod">
           <option value="نقدي">نقدي</option>
@@ -177,6 +193,9 @@
       <div>الوقت: {{ lastInvoice.createdAt | arabicTime }}</div>
       <div>الكاشير: {{ lastInvoice.cashierName }}</div>
       <div>طريقة الدفع: {{ lastInvoice.paymentMethod }}</div>
+      @if (lastInvoice.customerName) { <div>العميل: {{ lastInvoice.customerName }}</div> }
+      @if (lastInvoice.customerPhone) { <div>الجوال: {{ lastInvoice.customerPhone }}</div> }
+      @if (lastInvoice.guestsCount > 0) { <div>عدد الأفراد: {{ lastInvoice.guestsCount }}</div> }
     </div>
     <hr class="inv-divider">
     <table class="inv-table">

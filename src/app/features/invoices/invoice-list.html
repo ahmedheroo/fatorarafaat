@@ -2,7 +2,7 @@
   <h1 class="page-title">الفواتير</h1>
 </div>
 <div class="search-section">
-  <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="filterInvoices()" placeholder="بحث برقم الفاتورة...">
+  <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="filterInvoices()" placeholder="بحث برقم الفاتورة أو اسم العميل...">
 </div>
 <div class="table-container card">
   <table>
@@ -10,6 +10,7 @@
       <tr>
         <th>رقم الفاتورة</th>
         <th>التاريخ</th>
+        <th>العميل</th>
         <th>الكاشير</th>
         <th>طريقة الدفع</th>
         <th>الإجمالي</th>
@@ -21,6 +22,7 @@
         <tr>
           <td><strong>#{{ inv.invoiceNumber }}</strong></td>
           <td>{{ inv.createdAt | arabicDate }}</td>
+          <td>{{ inv.customerName || '—' }}</td>
           <td>{{ inv.cashierName }}</td>
           <td><span class="badge badge-info">{{ inv.paymentMethod }}</span></td>
           <td><strong>{{ inv.total.toFixed(2) }} ر.س</strong></td>
@@ -30,7 +32,7 @@
         </tr>
       }
       @empty {
-        <tr><td colspan="6" class="text-center" style="padding:2rem;color:#9ca3af">لا توجد فواتير</td></tr>
+        <tr><td colspan="7" class="text-center" style="padding:2rem;color:#9ca3af">لا توجد فواتير</td></tr>
       }
     </tbody>
   </table>

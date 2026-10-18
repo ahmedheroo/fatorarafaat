@@ -32,6 +32,12 @@
 .cart-row { display: flex; justify-content: space-between; align-items: center; padding: 0.35rem 0; font-size: 0.85rem; }
 .total-row { font-weight: 800; font-size: 1.1rem; border-top: 2px solid #e5e7eb; margin-top: 0.5rem; padding-top: 0.5rem; }
 .discount-input { width: 80px; text-align: center; padding: 0.3rem !important; font-size: 0.85rem; }
+.customer-fields { margin: 0.75rem 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.customer-fields label { font-size: 0.8rem; color: #374151; font-weight: 600; }
+.customer-input { width: 100%; padding: 0.45rem 0.6rem; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 0.85rem; font-family: inherit; }
+.customer-row { display: flex; gap: 0.4rem; }
+.customer-row .customer-input { flex: 1; min-width: 0; }
+.guests-input { max-width: 110px; }
 .payment-method { margin: 0.75rem 0; }
 .payment-method label { font-size: 0.8rem; margin-bottom: 0.35rem; }
 .payment-method select { width: 100%; }

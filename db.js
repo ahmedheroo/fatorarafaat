@@ -47,6 +47,9 @@ db.exec(`
     total REAL DEFAULT 0,
     paymentMethod TEXT DEFAULT '',
     cashierName TEXT DEFAULT '',
+    customerName TEXT DEFAULT '',
+    customerPhone TEXT DEFAULT '',
+    guestsCount REAL DEFAULT 0,
     createdAt TEXT
   );
 
@@ -176,7 +179,7 @@ function migrateFromJson() {
     const invoices = readJsonFile('invoices.json');
     if (Array.isArray(invoices) && invoices.length) {
       const invStmt = db.prepare(
-        'INSERT OR IGNORE INTO invoices (id, invoiceNumber, subtotal, discount, taxRate, taxAmount, total, paymentMethod, cashierName, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        'INSERT OR IGNORE INTO invoices (id, invoiceNumber, subtotal, discount, taxRate, taxAmount, total, paymentMethod, cashierName, customerName, customerPhone, guestsCount, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
       );
       const itemStmt = db.prepare(
         'INSERT INTO invoice_items (invoiceId, productId, productName, quantity, unitPrice, total) VALUES (?, ?, ?, ?, ?, ?)'
@@ -193,6 +196,9 @@ function migrateFromJson() {
           Number(inv.total) || 0,
           inv.paymentMethod || '',
           inv.cashierName || '',
+          inv.customerName || '',
+          inv.customerPhone || '',
+          Number(inv.guestsCount) || 0,
           inv.createdAt || new Date().toISOString()
         );
         if (Number(inv.invoiceNumber) > maxNumber) maxNumber = Number(inv.invoiceNumber);
@@ -272,6 +278,14 @@ function migrateFromJson() {
   }
 }
 
+function ensureInvoiceCustomerColumns() {
+  const cols = db.prepare('PRAGMA table_info(invoices)').all().map((c) => c.name);
+  if (!cols.includes('customerName')) db.exec("ALTER TABLE invoices ADD COLUMN customerName TEXT DEFAULT ''");
+  if (!cols.includes('customerPhone')) db.exec("ALTER TABLE invoices ADD COLUMN customerPhone TEXT DEFAULT ''");
+  if (!cols.includes('guestsCount')) db.exec('ALTER TABLE invoices ADD COLUMN guestsCount REAL DEFAULT 0');
+}
+
+ensureInvoiceCustomerColumns();
 migrateFromJson();
 
 // ==================== QUERY API ====================
@@ -336,7 +350,7 @@ const queries = {
   nextInvoiceNumber: () => Number(db.prepare("SELECT value FROM meta WHERE key = 'invoice_next'").get().value),
   insertInvoice: (inv) => {
     const insertInv = db.prepare(
-      'INSERT INTO invoices (id, invoiceNumber, subtotal, discount, taxRate, taxAmount, total, paymentMethod, cashierName, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+      'INSERT INTO invoices (id, invoiceNumber, subtotal, discount, taxRate, taxAmount, total, paymentMethod, cashierName, customerName, customerPhone, guestsCount, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
     const insertItem = db.prepare(
       'INSERT INTO invoice_items (invoiceId, productId, productName, quantity, unitPrice, total) VALUES (?, ?, ?, ?, ?, ?)'
@@ -347,7 +361,9 @@ const queries = {
       insertInv.run(
         inv.id, inv.invoiceNumber, inv.subtotal, inv.discount,
         inv.taxRate, inv.taxAmount, inv.total,
-        inv.paymentMethod || '', inv.cashierName || '', inv.createdAt
+        inv.paymentMethod || '', inv.cashierName || '',
+        inv.customerName || '', inv.customerPhone || '', Number(inv.guestsCount) || 0,
+        inv.createdAt
       );
       for (const it of inv.items || []) {
         insertItem.run(
