@@ -16,9 +16,9 @@
       <p><strong>الفرع:</strong> {{ inv.branchName }}</p>
       <p><strong>الكاشير:</strong> {{ inv.cashierName }}</p>
       <p><strong>طريقة الدفع:</strong> {{ inv.paymentMethod }}</p>
-      @if (inv.customerName) { <p><strong>اسم العميل:</strong> {{ inv.customerName }}</p> }
+      @if (inv.customerName) { <p><strong>اسم العميل:</strong> {{ inv.customerName }}</p> } 
       @if (inv.customerPhone) { <p><strong>جوال العميل:</strong> {{ inv.customerPhone }}</p> }
-      @if (inv.guestsCount > 0) { <p><strong>عدد الأفراد:</strong> {{ inv.guestsCount }}</p> }
+      @if ((inv.guestsCount ?? 0) > 0) { <p><strong>عدد الأفراد:</strong> {{ inv.guestsCount }}</p> }
     </div>
     <table class="inv-items-table">
       <thead>
@@ -68,9 +68,9 @@
       <div>الوقت: {{ inv.createdAt | arabicTime }}</div>
       <div>الكاشير: {{ inv.cashierName }}</div>
       <div>طريقة الدفع: {{ inv.paymentMethod }}</div>
-      @if (inv.customerName) { <div>العميل: {{ inv.customerName }}</div> }
+      @if (inv.customerName) { <div>إسم العميل: {{ inv.customerName }}</div> }
       @if (inv.customerPhone) { <div>الجوال: {{ inv.customerPhone }}</div> }
-      @if (inv.guestsCount > 0) { <div>عدد الأفراد: {{ inv.guestsCount }}</div> }
+      @if ((inv.guestsCount ?? 0) > 0) { <div>عدد الأفراد: {{ inv.guestsCount }}</div> }
     </div>
     <hr class="pr-divider">
     <table class="pr-table">

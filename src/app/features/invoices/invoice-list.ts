@@ -1,4 +1,4 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { InvoiceService } from '../../core/services/invoice.service';
@@ -19,6 +19,19 @@ export class InvoiceList implements OnInit {
   pageSize = 15;
   totalItems = signal(0);
   filteredInvoices = signal<Invoice[]>([]);
+
+  constructor() {
+    // Keep the list in sync when invoices finish loading after this page init.
+    effect(() => {
+      const all = this.invoiceService.invoices();
+      if (!this.searchQuery.trim()) {
+        this.filteredInvoices.set(all);
+        this.totalItems.set(all.length);
+      } else {
+        this.filterInvoices();
+      }
+    }, { allowSignalWrites: true });
+  }
 
   get totalPages(): number {
     return Math.max(1, Math.ceil(this.totalItems() / this.pageSize));

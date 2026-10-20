@@ -195,7 +195,7 @@
       <div>طريقة الدفع: {{ lastInvoice.paymentMethod }}</div>
       @if (lastInvoice.customerName) { <div>العميل: {{ lastInvoice.customerName }}</div> }
       @if (lastInvoice.customerPhone) { <div>الجوال: {{ lastInvoice.customerPhone }}</div> }
-      @if (lastInvoice.guestsCount > 0) { <div>عدد الأفراد: {{ lastInvoice.guestsCount }}</div> }
+      @if ((lastInvoice.guestsCount ?? 0) > 0) { <div>عدد الأفراد: {{ lastInvoice.guestsCount }}</div> }
     </div>
     <hr class="inv-divider">
     <table class="inv-table">

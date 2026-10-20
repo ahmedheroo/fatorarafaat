@@ -1,4 +1,7 @@
 import { Component, signal, inject, OnInit, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from 'environments/environment';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { InvoiceService } from '../../core/services/invoice.service';
 import { SettingsService } from '../../core/services/settings.service';
@@ -70,22 +73,29 @@ export class InvoiceDetail implements OnInit {
   private invoiceService = inject(InvoiceService);
   private settingsService = inject(SettingsService);
   private route = inject(ActivatedRoute);
+  private http = inject(HttpClient);
 
   invoice = signal<Invoice | undefined>(undefined);
   settings = computed(() => this.settingsService.settings());
   qrDataUrl = signal<string>('');
   private qrReady: Promise<void> = Promise.resolve();
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      const inv = this.invoiceService.getInvoiceById(id);
-      this.invoice.set(inv);
-
-      if (inv) {
-        this.generateQr(inv);
-      }
+    if (!id) return;
+    // Prefer the cached list, but fall back to the API (e.g. page refresh
+    // before the global invoice preload finishes).
+    const cached = this.invoiceService.getInvoiceById(id);
+    if (cached) {
+      this.invoice.set(cached);
+      this.generateQr(cached);
+      return;
     }
+    try {
+      const inv = await firstValueFrom(this.http.get<Invoice>(`${environment.apiBaseUrl}/api/invoices/${id}`));
+      this.invoice.set(inv);
+      if (inv) this.generateQr(inv);
+    } catch { this.invoice.set(undefined); }
   }
 
   private generateQr(inv: Invoice): void {

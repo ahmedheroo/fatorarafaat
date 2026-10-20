@@ -8,6 +8,12 @@ export interface InvoiceItem {
   total: number;
 }
 
+export interface CustomerInfo {
+  name?: string;
+  phone?: string;
+  guests?: number | null;
+}
+
 export interface Invoice {
   id: string;
   invoiceNumber: number;
@@ -18,8 +24,8 @@ export interface Invoice {
   paymentMethod: PaymentMethod;
   cashierName: string;
   branchName: string;
-  customerName: string;
-  customerPhone: string;
-  guestsCount: number;
+  customerName?: string;
+  customerPhone?: string;
+  guestsCount?: number;
   createdAt: string;
 }

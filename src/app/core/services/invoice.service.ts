@@ -19,7 +19,12 @@ export class InvoiceService {
 
   async loadInvoices(): Promise<void> {
     const invoices = await firstValueFrom(this.http.get<Invoice[]>(`${environment.apiBaseUrl}/api/invoices`));
-    this._invoices.set(invoices);
+    this._invoices.set((invoices || []).map(inv => ({
+      ...inv,
+      customerName: inv.customerName || '',
+      customerPhone: inv.customerPhone || '',
+      guestsCount: Number(inv.guestsCount) || 0
+    })));
   }
 
   async completeSale(
