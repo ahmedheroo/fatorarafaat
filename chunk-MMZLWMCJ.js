@@ -1,0 +1,1 @@
+import{Ga as a}from"./chunk-3QAS6UA3.js";var i=class r{transform(t){let e=new Date(t);return isNaN(e.getTime())?"":e.toLocaleDateString("ar-SA-u-ca-gregory-nu-latn",{year:"numeric",month:"long",day:"numeric"})}static \u0275fac=function(e){return new(e||r)};static \u0275pipe=a({name:"arabicDate",type:r,pure:!0})};export{i as a};
