@@ -2,6 +2,7 @@
   <h1 class="page-title">فاتورة #{{ invoice()?.invoiceNumber }}</h1>
   <div>
     <button class="btn btn-primary" (click)="printInvoice()"><i class="fas fa-print"></i> طباعة</button>
+    <button class="btn btn-danger" (click)="confirmDelete()" [disabled]="deleting()"><i class="fas fa-trash-alt"></i> حذف</button>
     <a routerLink="/invoices" class="btn btn-secondary">العودة</a>
   </div>
 </div>
@@ -11,8 +12,12 @@
     <div class="inv-section">
       <h3>بيانات الفاتورة</h3>
       <p><strong>رقم الفاتورة:</strong> #{{ inv.invoiceNumber }}</p>
-      <p><strong>التاريخ:</strong> {{ inv.createdAt | arabicDate }}</p>
-      <p><strong>الوقت:</strong> {{ inv.createdAt | arabicTime }}</p>
+      @if (inv.reservedAt) {
+        <p><strong>موعد الحجز:</strong> {{ inv.reservedAt | arabicDay }} {{ inv.reservedAt | arabicDate }}</p>
+        <p><strong>وقت الحجز:</strong> {{ inv.reservedAt | arabicTime }}</p>
+      }
+      <p><strong>تاريخ الإصدار:</strong> {{ inv.createdAt | arabicDay }} {{ inv.createdAt | arabicDate }}</p>
+      <p><strong>وقت الإصدار:</strong> {{ inv.createdAt | arabicTime }}</p>
       <p><strong>الفرع:</strong> {{ inv.branchName }}</p>
       <p><strong>الكاشير:</strong> {{ inv.cashierName }}</p>
       <p><strong>طريقة الدفع:</strong> {{ inv.paymentMethod }}</p>
@@ -64,8 +69,12 @@
     </div>
     <div class="pr-meta">
       <div>رقم الفاتورة: {{ inv.invoiceNumber }}</div>
-      <div>التاريخ: {{ inv.createdAt | arabicDate }}</div>
-      <div>الوقت: {{ inv.createdAt | arabicTime }}</div>
+      @if (inv.reservedAt) {
+        <div>موعد الحجز: {{ inv.reservedAt | arabicDay }} - {{ inv.reservedAt | arabicDate }}</div>
+        <div>وقت الحجز: {{ inv.reservedAt | arabicTime }}</div>
+      }
+      <div>تاريخ الإصدار: {{ inv.createdAt | arabicDay }} {{ inv.createdAt | arabicDate }}</div>
+      <div>وقت الإصدار: {{ inv.createdAt | arabicTime }}</div>
       <div>الكاشير: {{ inv.cashierName }}</div>
       <div>طريقة الدفع: {{ inv.paymentMethod }}</div>
       @if (inv.customerName) { <div>إسم العميل: {{ inv.customerName }}</div> }
@@ -105,3 +114,7 @@
     </div>
   </div>
 }
+
+<app-confirm-dialog [isOpen]="showDeleteDialog()" [title]="'حذف فاتورة'"
+  [message]="'هل أنت متأكد من حذف هذه الفاتورة نهائياً؟ لا يمكن التراجع.'" [confirmText]="'حذف'"
+  (confirmed)="deleteInvoice()" (cancelled)="showDeleteDialog.set(false)" />

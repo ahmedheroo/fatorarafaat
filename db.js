@@ -283,6 +283,7 @@ function ensureInvoiceCustomerColumns() {
   if (!cols.includes('customerName')) db.exec("ALTER TABLE invoices ADD COLUMN customerName TEXT DEFAULT ''");
   if (!cols.includes('customerPhone')) db.exec("ALTER TABLE invoices ADD COLUMN customerPhone TEXT DEFAULT ''");
   if (!cols.includes('guestsCount')) db.exec('ALTER TABLE invoices ADD COLUMN guestsCount REAL DEFAULT 0');
+  if (!cols.includes('reservedAt')) db.exec("ALTER TABLE invoices ADD COLUMN reservedAt TEXT DEFAULT ''");
 }
 
 ensureInvoiceCustomerColumns();
@@ -350,7 +351,7 @@ const queries = {
   nextInvoiceNumber: () => Number(db.prepare("SELECT value FROM meta WHERE key = 'invoice_next'").get().value),
   insertInvoice: (inv) => {
     const insertInv = db.prepare(
-      'INSERT INTO invoices (id, invoiceNumber, subtotal, discount, taxRate, taxAmount, total, paymentMethod, cashierName, customerName, customerPhone, guestsCount, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+      'INSERT INTO invoices (id, invoiceNumber, subtotal, discount, taxRate, taxAmount, total, paymentMethod, cashierName, customerName, customerPhone, guestsCount, reservedAt, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
     const insertItem = db.prepare(
       'INSERT INTO invoice_items (invoiceId, productId, productName, quantity, unitPrice, total) VALUES (?, ?, ?, ?, ?, ?)'
@@ -363,7 +364,7 @@ const queries = {
         inv.taxRate, inv.taxAmount, inv.total,
         inv.paymentMethod || '', inv.cashierName || '',
         inv.customerName || '', inv.customerPhone || '', Number(inv.guestsCount) || 0,
-        inv.createdAt
+        inv.reservedAt || '', inv.createdAt
       );
       for (const it of inv.items || []) {
         insertItem.run(
@@ -373,6 +374,18 @@ const queries = {
       }
       bump.run(String(inv.invoiceNumber + 1));
       db.exec('COMMIT');
+    } catch (e) {
+      db.exec('ROLLBACK');
+      throw e;
+    }
+  },
+  deleteInvoice: (id) => {
+    db.exec('BEGIN');
+    try {
+      db.prepare('DELETE FROM invoice_items WHERE invoiceId = ?').run(id);
+      const result = db.prepare('DELETE FROM invoices WHERE id = ?').run(id);
+      db.exec('COMMIT');
+      return result.changes;
     } catch (e) {
       db.exec('ROLLBACK');
       throw e;

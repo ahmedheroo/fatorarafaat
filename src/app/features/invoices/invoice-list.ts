@@ -4,13 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { InvoiceService } from '../../core/services/invoice.service';
 import { Invoice } from '../../core/models';
 import { ArabicDatePipe } from '../../shared/pipes/date.pipe';
+import { ArabicTimePipe } from '../../shared/pipes/time.pipe';
+import { ArabicDayPipe } from '../../shared/pipes/day.pipe';
 
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
-  imports: [RouterLink, FormsModule, ArabicDatePipe],
+  imports: [RouterLink, FormsModule, ArabicDatePipe, ArabicTimePipe, ArabicDayPipe],
   templateUrl: './invoice-list.html',
-  styles: ['.search-section { margin-bottom: 1.5rem; } .search-section input { max-width: 400px; } .pagination { display: flex; gap: 0.4rem; justify-content: center; margin-top: 1rem; } .pagination button { padding: 0.4rem 0.7rem; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; color: #374151; font-size: 0.85rem; } .pagination button.active { background: #3b82f6; color: #fff; border-color: #3b82f6; } .pagination button:disabled { opacity: 0.4; cursor: not-allowed; } .pagination .info { padding: 0.4rem 0.7rem; font-size: 0.85rem; color: #6b7280; display: flex; align-items: center; gap: 0.4rem; }']
+  styles: ['.cell-sub { font-size: 0.78rem; color: #6b7280; margin-top: 0.15rem; } .search-section { margin-bottom: 1.5rem; } .search-section input { max-width: 400px; } .pagination { display: flex; gap: 0.4rem; justify-content: center; margin-top: 1rem; } .pagination button { padding: 0.4rem 0.7rem; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; color: #374151; font-size: 0.85rem; } .pagination button.active { background: #3b82f6; color: #fff; border-color: #3b82f6; } .pagination button:disabled { opacity: 0.4; cursor: not-allowed; } .pagination .info { padding: 0.4rem 0.7rem; font-size: 0.85rem; color: #6b7280; display: flex; align-items: center; gap: 0.4rem; }']
 })
 export class InvoiceList implements OnInit {
   private invoiceService = inject(InvoiceService);

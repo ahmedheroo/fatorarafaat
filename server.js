@@ -250,6 +250,7 @@ app.post('/api/invoices', (req, res) => {
     customerName: (req.body.customerName || '').trim(),
     customerPhone: (req.body.customerPhone || '').trim(),
     guestsCount: Number(req.body.guestsCount) || 0,
+    reservedAt: req.body.reservedAt || '',
     createdAt: req.body.createdAt || new Date().toISOString(),
     items: (req.body.items || []).map((it) => ({
       productId: it.productId || '',
@@ -262,6 +263,14 @@ app.post('/api/invoices', (req, res) => {
 
   queries.insertInvoice(invoice);
   res.json(invoice);
+});
+
+app.delete('/api/invoices/:id', (req, res) => {
+  const existing = queries.findInvoiceById(req.params.id);
+  if (!existing) return res.status(404).json({ message: 'الفاتورة غير موجودة' });
+
+  queries.deleteInvoice(req.params.id);
+  res.json({ success: true });
 });
 
 // ==================== SETTINGS ====================

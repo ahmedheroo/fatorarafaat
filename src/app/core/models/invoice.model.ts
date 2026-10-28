@@ -12,6 +12,8 @@ export interface CustomerInfo {
   name?: string;
   phone?: string;
   guests?: number | null;
+  /** Date/time the customer reserved for (ISO). */
+  reservedAt?: string;
 }
 
 export interface Invoice {
@@ -27,5 +29,7 @@ export interface Invoice {
   customerName?: string;
   customerPhone?: string;
   guestsCount?: number;
+  /** Date/time the customer reserved for (ISO). Empty when not provided. */
+  reservedAt?: string;
   createdAt: string;
 }

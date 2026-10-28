@@ -2,19 +2,22 @@ import { Component, signal, inject, OnInit, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'environments/environment';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { InvoiceService } from '../../core/services/invoice.service';
 import { SettingsService } from '../../core/services/settings.service';
 import { Invoice } from '../../core/models';
 import { ArabicDatePipe } from '../../shared/pipes/date.pipe';
 import { ArabicTimePipe } from '../../shared/pipes/time.pipe';
+import { ArabicDayPipe } from '../../shared/pipes/day.pipe';
+import { ToastService } from '../../core/services/toast.service';
+import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-dialog';
 import { buildReceiptQr } from '../../core/utils/zatca-qr';
 import QRCode from 'qrcode';
 
 @Component({
   selector: 'app-invoice-detail',
   standalone: true,
-  imports: [RouterLink, ArabicDatePipe, ArabicTimePipe],
+  imports: [RouterLink, ArabicDatePipe, ArabicTimePipe, ArabicDayPipe, ConfirmDialog],
   templateUrl: './invoice-detail.html',
   styles: [`
     .inv-section { margin-bottom: 1.5rem; }
@@ -73,11 +76,15 @@ export class InvoiceDetail implements OnInit {
   private invoiceService = inject(InvoiceService);
   private settingsService = inject(SettingsService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private toast = inject(ToastService);
   private http = inject(HttpClient);
 
   invoice = signal<Invoice | undefined>(undefined);
   settings = computed(() => this.settingsService.settings());
   qrDataUrl = signal<string>('');
+  showDeleteDialog = signal(false);
+  deleting = signal(false);
   private qrReady: Promise<void> = Promise.resolve();
 
   async ngOnInit(): Promise<void> {
@@ -106,6 +113,26 @@ export class InvoiceDetail implements OnInit {
       this.qrDataUrl.set(url);
       await this.waitForQrImage(url);
     }).catch(() => { /* ignore */ });
+  }
+
+  confirmDelete(): void {
+    if (this.invoice()) this.showDeleteDialog.set(true);
+  }
+
+  async deleteInvoice(): Promise<void> {
+    const inv = this.invoice();
+    this.showDeleteDialog.set(false);
+    if (!inv || this.deleting()) return;
+
+    this.deleting.set(true);
+    try {
+      await this.invoiceService.deleteInvoice(inv.id);
+      this.toast.success('تم حذف الفاتورة');
+      await this.router.navigate(['/invoices']);
+    } catch {
+      this.toast.error('تعذر حذف الفاتورة');
+      this.deleting.set(false);
+    }
   }
 
   async printInvoice(): Promise<void> {

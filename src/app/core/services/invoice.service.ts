@@ -2,7 +2,7 @@ import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'environments/environment';
-import { Invoice, InvoiceItem, PaymentMethod } from '../models';
+import { CustomerInfo, Invoice, InvoiceItem, PaymentMethod } from '../models';
 import { CartService } from './cart.service';
 import { AuthService } from './auth.service';
 import { SettingsService } from './settings.service';
@@ -30,7 +30,7 @@ export class InvoiceService {
   async completeSale(
     paymentMethod: PaymentMethod,
     branchName: string,
-    customer: { name?: string; phone?: string; guests?: number | null } = {}
+    customer: CustomerInfo = {}
   ): Promise<Invoice> {
     const items = this.cartService.items();
     const discount = this.cartService.discount();
@@ -60,13 +60,27 @@ export class InvoiceService {
       customerName: customer.name?.trim() ?? '',
       customerPhone: customer.phone?.trim() ?? '',
       guestsCount: customer.guests && customer.guests > 0 ? Math.floor(customer.guests) : 0,
+      reservedAt: customer.reservedAt || '',
       createdAt: new Date().toISOString()
     };
 
     const saved = await firstValueFrom(this.http.post<Invoice>(`${environment.apiBaseUrl}/api/invoices`, invoice));
-    this._invoices.update(list => [saved, ...list]);
+    // Keep the values entered at the till even when an older API build does not
+    // echo them back, so the printed receipt shows the chosen reservation date.
+    const result: Invoice = {
+      ...invoice,
+      ...saved,
+      branchName: saved.branchName || branchName,
+      reservedAt: saved.reservedAt || invoice.reservedAt
+    };
+    this._invoices.update(list => [result, ...list]);
     this.cartService.clear();
-    return saved;
+    return result;
+  }
+
+  async deleteInvoice(id: string): Promise<void> {
+    await firstValueFrom(this.http.delete(`${environment.apiBaseUrl}/api/invoices/${id}`));
+    this._invoices.update(list => list.filter(inv => inv.id !== id));
   }
 
   getInvoiceById(id: string): Invoice | undefined {

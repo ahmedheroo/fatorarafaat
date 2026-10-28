@@ -21,7 +21,13 @@
       @for (inv of currentPageData; track inv.id) {
         <tr>
           <td><strong>#{{ inv.invoiceNumber }}</strong></td>
-          <td>{{ inv.createdAt | arabicDate }}</td>
+          <td>
+            <div>{{ inv.createdAt | arabicDay }}، {{ inv.createdAt | arabicDate }}</div>
+            <div class="cell-sub">{{ inv.createdAt | arabicTime }}</div>
+            @if (inv.reservedAt) {
+              <div class="cell-sub">حجز: {{ inv.reservedAt | arabicDay }} {{ inv.reservedAt | arabicDate }} {{ inv.reservedAt | arabicTime }}</div>
+            }
+          </td>
           <td>{{ inv.customerName || '—' }}</td>
           <td>{{ inv.cashierName }}</td>
           <td><span class="badge badge-info">{{ inv.paymentMethod }}</span></td>

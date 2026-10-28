@@ -8,13 +8,14 @@ import { ToastService } from '../../core/services/toast.service';
 import { Product, Invoice, PaymentMethod, Branch } from '../../core/models';
 import { ArabicDatePipe } from '../../shared/pipes/date.pipe';
 import { ArabicTimePipe } from '../../shared/pipes/time.pipe';
+import { ArabicDayPipe } from '../../shared/pipes/day.pipe';
 import { buildReceiptQr } from '../../core/utils/zatca-qr';
 import QRCode from 'qrcode';
 
 @Component({
   selector: 'app-pos',
   standalone: true,
-  imports: [FormsModule, ArabicDatePipe, ArabicTimePipe],
+  imports: [FormsModule, ArabicDatePipe, ArabicTimePipe, ArabicDayPipe],
   templateUrl: './pos.html',
   styleUrl: './pos.scss'
 })
@@ -32,6 +33,8 @@ export class Pos implements OnInit {
   customerName = '';
   customerPhone = '';
   guestsCount: number | null = null;
+  reservedDate = '';
+  reservedTime = '';
   paymentMethod: PaymentMethod = PaymentMethod.CASH;
   showMobileCart = false;
   lastInvoice: Invoice | null = null;
@@ -98,7 +101,17 @@ export class Pos implements OnInit {
     this.customerName = '';
     this.customerPhone = '';
     this.guestsCount = null;
+    this.reservedDate = '';
+    this.reservedTime = '';
     this.showMobileCart = false;
+  }
+
+  /** Combines the reservation date/time inputs into an ISO string (empty when no date). */
+  private reservedAtIso(): string {
+    if (!this.reservedDate) return '';
+    const time = this.reservedTime || '00:00';
+    const date = new Date(`${this.reservedDate}T${time}`);
+    return isNaN(date.getTime()) ? '' : date.toISOString();
   }
 
   async completeSale(): Promise<void> {
@@ -113,12 +126,15 @@ export class Pos implements OnInit {
     this.lastInvoice = await this.invoiceService.completeSale(this.paymentMethod, this.selectedBranch()!.name, {
       name: this.customerName,
       phone: this.customerPhone,
-      guests: this.guestsCount
+      guests: this.guestsCount,
+      reservedAt: this.reservedAtIso()
     });
     this.discountAmount = 0;
     this.customerName = '';
     this.customerPhone = '';
     this.guestsCount = null;
+    this.reservedDate = '';
+    this.reservedTime = '';
     this.showMobileCart = false;
     this.toast.success('تم إتمام البيع بنجاح');
 

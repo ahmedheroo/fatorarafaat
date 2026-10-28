@@ -85,6 +85,11 @@
           <input type="tel" [(ngModel)]="customerPhone" placeholder="جوال العميل" class="customer-input" dir="ltr">
           <input type="number" [(ngModel)]="guestsCount" placeholder="عدد الأفراد" min="1" class="customer-input guests-input">
         </div>
+        <label>موعد الحجز (اختياري)</label>
+        <div class="customer-row">
+          <input type="date" [(ngModel)]="reservedDate" class="customer-input" dir="ltr" aria-label="تاريخ الحجز">
+          <input type="time" [(ngModel)]="reservedTime" class="customer-input" dir="ltr" aria-label="وقت الحجز">
+        </div>
       </div>
       <div class="payment-method">
         <label>طريقة الدفع</label>
@@ -158,6 +163,11 @@
           <input type="tel" [(ngModel)]="customerPhone" placeholder="جوال العميل" class="customer-input" dir="ltr">
           <input type="number" [(ngModel)]="guestsCount" placeholder="عدد الأفراد" min="1" class="customer-input guests-input">
         </div>
+        <label>موعد الحجز (اختياري)</label>
+        <div class="customer-row">
+          <input type="date" [(ngModel)]="reservedDate" class="customer-input" dir="ltr" aria-label="تاريخ الحجز">
+          <input type="time" [(ngModel)]="reservedTime" class="customer-input" dir="ltr" aria-label="وقت الحجز">
+        </div>
       </div>
       <div class="payment-method">
         <select [(ngModel)]="paymentMethod">
@@ -189,8 +199,12 @@
     </div>
     <div class="inv-meta">
       <div>رقم الفاتورة: {{ lastInvoice.invoiceNumber }}</div>
-      <div>التاريخ: {{ lastInvoice.createdAt | arabicDate }}</div>
-      <div>الوقت: {{ lastInvoice.createdAt | arabicTime }}</div>
+      @if (lastInvoice.reservedAt) {
+      <div>موعد الحجز: {{ lastInvoice.reservedAt | arabicDay }} - {{ lastInvoice.reservedAt | arabicDate }}</div>
+      <div>وقت الحجز: {{ lastInvoice.reservedAt | arabicTime }}</div>
+      }
+      <div>تاريخ الإصدار: {{ lastInvoice.createdAt | arabicDay }} {{ lastInvoice.createdAt | arabicDate }}</div>
+      <div>وقت الإصدار: {{ lastInvoice.createdAt | arabicTime }}</div>
       <div>الكاشير: {{ lastInvoice.cashierName }}</div>
       <div>طريقة الدفع: {{ lastInvoice.paymentMethod }}</div>
       @if (lastInvoice.customerName) { <div>العميل: {{ lastInvoice.customerName }}</div> }
