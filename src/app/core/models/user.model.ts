@@ -1,7 +1,9 @@
 export interface User {
   id: string;
+  tenantId?: string;
   username: string;
-  password: string;
+  /** Never returned by the API; only sent when creating/updating a user. */
+  password?: string;
   displayName: string;
   role: 'admin' | 'cashier';
   active: boolean;

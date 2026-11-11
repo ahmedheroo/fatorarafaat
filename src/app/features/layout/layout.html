@@ -4,7 +4,7 @@
       <div class="logo">
         <i class="fas fa-cash-register logo-icon"></i>
         @if (!sidebarCollapsed()) {
-          <span class="logo-text">نقطة البيع</span>
+          <span class="logo-text" [title]="tenantName()" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px;">{{ tenantName() }}</span>
         }
       </div>
       <button class="sidebar-toggle" (click)="toggleSidebar()">
@@ -40,7 +40,15 @@
       </button>
     </div>
   </aside>
-  <main class="main-content"><router-outlet /></main>
+  <main class="main-content">
+    @if (ready()) {
+      <router-outlet />
+    } @else {
+      <div style="display:flex;align-items:center;justify-content:center;height:60vh;color:#9ca3af;font-size:0.95rem;">
+        جاري تحميل بيانات المتجر...
+      </div>
+    }
+  </main>
   <nav class="mobile-nav">
     @for (item of mobileNavItems(); track item.route) {
       <a class="mobile-nav-item" [routerLink]="item.route" routerLinkActive="active"

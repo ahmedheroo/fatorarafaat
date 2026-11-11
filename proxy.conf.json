@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://fatorarafaat.runasp.net/api",
+    "target": "http://localhost:3000/api",
     "secure": true,
     "changeOrigin": true
   }

@@ -8,16 +8,31 @@
       <input type="text" [(ngModel)]="formData.shopName" name="shopName" required>
     </div>
     <div class="form-group">
-      <label>رابط شعار المحل (Logo URL)</label>
-      <input type="text" [(ngModel)]="formData.logoUrl" name="logoUrl" placeholder="https://example.com/logo.png">
+      <label>شعار المحل</label>
+      <div class="logo-actions">
+        <input #logoFile type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
+               (change)="onLogoSelected($event)" hidden>
+        <button type="button" class="btn btn-secondary" (click)="logoFile.click()" [disabled]="logoUploading">
+          <i class="fas" [class.fa-upload]="!logoUploading" [class.fa-spinner]="logoUploading" [class.fa-spin]="logoUploading"></i>
+          {{ logoUploading ? 'جاري رفع الشعار...' : (formData.logoUrl ? 'تغيير الشعار' : 'رفع شعار') }}
+        </button>
+        @if (formData.logoUrl) {
+          <button type="button" class="btn btn-danger btn-sm" (click)="onRemoveLogo()" [disabled]="logoUploading">
+            <i class="fas fa-trash-alt"></i> إزالة الشعار
+          </button>
+        }
+      </div>
       @if (formData.logoUrl) {
         <div class="logo-preview">
           <img [src]="formData.logoUrl" alt="شعار المحل" (error)="logoError = true" [style.display]="logoError ? 'none' : 'block'">
           @if (logoError) {
-            <p class="logo-error">رابط الصورة غير صالح</p>
+            <p class="logo-error">تعذر عرض الصورة</p>
           }
         </div>
       }
+      <small class="field-hint" style="display:block;margin-top:0.35rem;color:#6b7280;font-size:0.8rem">
+        اختر صورة من جهازك (PNG أو JPG أو WEBP). الصور الكبيرة تُصغَّر تلقائياً.
+      </small>
     </div>
     <div class="form-group">
       <label>عنوان المحل</label>

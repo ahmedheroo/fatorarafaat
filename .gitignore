@@ -46,3 +46,6 @@ Thumbs.db
 *.db-wal
 *.db-shm
 data/pos.db*
+data/.session-secret
+# Uploaded store logos
+data/uploads/
